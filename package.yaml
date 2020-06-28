@@ -1,0 +1,71 @@
+name:                mirror-hackage
+version:             0.1.0.0
+github:              "alexoundos/mirror-hackage"
+license:             GPL-3
+author:              "Alexander Tomokhov"
+maintainer:          "Alexander Tomokhov"
+copyright:           "Alexander Tomokhov"
+
+extra-source-files:
+- README.md
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/alexoundos/mirror-hackage#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+
+ghc-options:
+- -Wall -Wcompat
+- -Wpartial-fields -Wincomplete-record-updates
+- -Widentities -Wincomplete-uni-patterns -Wredundant-constraints
+
+library:
+  source-dirs: src
+  exposed: false
+  dependencies:
+  - aeson
+  - base16-bytestring
+  - bytestring
+  - cryptohash-sha1
+  - cryptohash-sha256
+  - cryptohash-sha512
+  - conduit
+  - directory
+  - filepath
+  - http-client
+  - req
+  - req-conduit
+  - safe-exceptions
+  - temporary
+  - text
+  - unordered-containers
+  - pretty-simple
+
+executables:
+  mirror-hackage-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - mirror-hackage
+    - directory
+    - optparse-applicative
+
+tests:
+  mirror-hackage-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - mirror-hackage
+    - hspec
+    - unordered-containers

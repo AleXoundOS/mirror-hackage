@@ -20,7 +20,7 @@ main = run =<< customExecParser p opts
     opts = info (helper <*> optsParser)
       ( fullDesc
         <> header "mirror-hackage - \
-                  \download all hackage packages archives and cabal revisions \
+                  \download all hackage packages (including revisions) \
                   \ready to be served with http server"
       )
     p = defaultPrefs {prefShowHelpOnError = True}

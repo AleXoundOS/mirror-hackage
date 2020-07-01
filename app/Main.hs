@@ -6,6 +6,13 @@ module Main (main) where
 import Options.Applicative as OA
 import System.Directory (createDirectoryIfMissing)
 
+import Text.Pretty.Simple
+import qualified Data.HashMap.Strict as HM
+
+
+import DownloadHackage
+import HackageJson
+
 
 data Opts = Opts
   { optBasePath    :: FilePath
@@ -21,13 +28,16 @@ main = run =<< customExecParser p opts
       ( fullDesc
         <> header "mirror-hackage - \
                   \download all hackage packages (including revisions) \
-                  \ready to be served with http server"
+                  \ready to be served with http server provided hackage.json"
       )
     p = defaultPrefs {prefShowHelpOnError = True}
 
 run :: Opts -> IO ()
 run opts = do
   createDirectoryIfMissing True (optBasePath opts)
+  hackageJsonParsed <- parseHackageJson (optHackageJson opts)
+  pPrint $ take 10 $ getDownloadPlan hackageJsonParsed
+  -- downloadHackage (optHackageJson opts)
 
 optsParser :: Parser Opts
 optsParser = do

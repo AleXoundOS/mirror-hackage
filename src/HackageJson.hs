@@ -2,7 +2,8 @@
 {-# LANGUAGE RecordWildCards #-}
 
 module HackageJson
-  ( HackageJson, RevisionData(..), Package(..), Revisions(..)
+  ( HackageJson, RevisionData(..), Package(..), Revisions(..), Hash
+  , PkgName, Version, Revision, OutPath
   , parseHackageJson
   )
   where
@@ -12,19 +13,18 @@ import Data.Aeson.Types (Parser)
 import Data.ByteString (ByteString)
 import Data.HashMap.Strict (HashMap)
 import Data.Text (Text)
-import Data.Traversable (for)
 import qualified Data.HashMap.Strict as HM
-import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
+import Control.Monad
 
 
-type Name     = Text
+type PkgName  = Text
 type Version  = Text
 type Revision = Text
 type OutPath  = Text
 type Hash = ByteString
 
-type HackageJson = HashMap Name (HashMap Version Package)
+type HackageJson = HashMap PkgName (HashMap Version Package)
 
 data Package = Package
   { pkgRevs :: Revisions
@@ -64,5 +64,5 @@ instance FromJSON RevisionData where
 parseSha256 :: Value -> Parser Hash
 parseSha256 = withText "sha256" $ \t -> return $ T.encodeUtf8 t
 
-parseHackageJson :: FilePath -> IO (Either String HackageJson)
-parseHackageJson = eitherDecodeFileStrict'
+parseHackageJson :: FilePath -> IO HackageJson
+parseHackageJson = return . either error id <=< eitherDecodeFileStrict'

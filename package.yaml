@@ -42,10 +42,9 @@ library:
   - temporary
   - text
   - unordered-containers
-  - pretty-simple
 
 executables:
-  mirror-hackage-exe:
+  mirror-hackage:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
@@ -56,6 +55,8 @@ executables:
     - mirror-hackage
     - directory
     - optparse-applicative
+    - pretty-simple
+    - unordered-containers
 
 tests:
   mirror-hackage-test:

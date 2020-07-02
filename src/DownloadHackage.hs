@@ -16,14 +16,10 @@ import HackageJson
 
 type DownloadPlan = [Download]
 data Download = Download
-  { dlReq  :: Request
+  { dlUrl  :: Url 'Https
   , dlHash :: Maybe Hash
   , dlFp   :: FilePath
-  }
-
-instance Show Download where
-  show (Download (Right (url, _)) hash fp) =
-    "url: " ++ show url ++ "\nhash: " ++ show hash ++ "\nfp: " ++ show fp
+  } deriving (Show)
 
 
 baseUrl :: Url 'Https
@@ -46,15 +42,16 @@ mkDlOfPkg pkgName (ver, Package (Revisions _ revs) hash) =
       pkgBaseUrl = baseUrl /: pkgHyphenVer
       pkgArchiveUrl = pkgBaseUrl /: (pkgHyphenVer <> ".tar.gz")
       dlOfArchive = Download
-        { dlReq  = Right (pkgArchiveUrl, mempty)
+        { dlUrl = pkgArchiveUrl
         , dlHash = Just hash
-        , dlFp   = T.unpack $ pkgHyphenVer <> pkgHyphenVer <> ".tar.gz"
+        , dlFp = T.unpack $ pkgHyphenVer <> pkgHyphenVer <> ".tar.gz"
         }
       mkDlOfCabal :: RevisionData -> Download
       mkDlOfCabal (RevisionData _ revNum cabalHash) = Download
-        { dlReq =
-            Right (pkgBaseUrl /: "revisions" /: T.pack (show revNum), mempty)
+        { dlUrl = pkgBaseUrl /: "/revision/" /: T.pack (show revNum) <> ".cabal"
         , dlHash = Just cabalHash
-        , dlFp = T.unpack $ pkgHyphenVer <> "revisions" <> T.pack (show revNum)
+        , dlFp =
+            T.unpack
+            $ pkgHyphenVer <> "/revision/" <> T.pack (show revNum) <> ".cabal"
         }
   in dlOfArchive : map mkDlOfCabal (HM.elems revs)

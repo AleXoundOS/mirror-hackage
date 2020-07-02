@@ -29,10 +29,10 @@ library:
   - aeson
   - base16-bytestring
   - bytestring
+  - conduit
   - cryptohash-sha1
   - cryptohash-sha256
   - cryptohash-sha512
-  - conduit
   - directory
   - filepath
   - http-client
@@ -52,8 +52,8 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - mirror-hackage
     - directory
+    - mirror-hackage
     - optparse-applicative
     - pretty-simple
     - unordered-containers
@@ -67,6 +67,6 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - mirror-hackage
     - hspec
+    - mirror-hackage
     - unordered-containers

@@ -8,14 +8,15 @@ module HackageJson
   )
   where
 
+import Control.Monad
 import Data.Aeson
 import Data.Aeson.Types (Parser)
 import Data.ByteString (ByteString)
 import Data.HashMap.Strict (HashMap)
 import Data.Text (Text)
+import qualified Data.ByteString.Base16 as Base16
 import qualified Data.HashMap.Strict as HM
 import qualified Data.Text.Encoding as T
-import Control.Monad
 
 
 type PkgName  = Text
@@ -62,7 +63,8 @@ instance FromJSON RevisionData where
 
 
 parseSha256 :: Value -> Parser Hash
-parseSha256 = withText "sha256" $ \t -> return $ T.encodeUtf8 t
+parseSha256 =
+  withText "sha256" $ \t -> return $ fst $ Base16.decode $ T.encodeUtf8 t
 
 parseHackageJson :: FilePath -> IO HackageJson
 parseHackageJson = return . either error id <=< eitherDecodeFileStrict'

@@ -1,3 +1,5 @@
 .stack-work/
 *~
 mirror-hackage.cabal
+*.json
+hackage-mirror/

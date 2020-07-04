@@ -10,8 +10,8 @@ module DownloadFile
   , downloadAndSave, downloadAndSave'
   , showDownloadError
   , mkRequest
-  , sinkHash, sinkSha1, sinkSha256, sinkSha512, sinkBypass
-  , sha1, sha256, sha512
+  , sinkHash, sinkSha256, sinkBypass
+  , sha256
   ) where
 
 import Conduit
@@ -28,9 +28,7 @@ import System.Directory (createDirectoryIfMissing, doesFileExist, renameFile)
 import System.FilePath.Posix (takeDirectory)
 import System.IO (hClose)
 import System.IO.Temp (withTempFile)
-import qualified Crypto.Hash.SHA1 as SHA1
 import qualified Crypto.Hash.SHA256 as SHA256
-import qualified Crypto.Hash.SHA512 as SHA512
 import qualified Data.ByteString.Base16 as Base16 (encode)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T (encodeUtf8)
@@ -58,23 +56,11 @@ showDownloadError (CheckError (csExp, csGot) fp) =
   "Got:      " ++ show (Base16.encode csGot)
 
 
-sha1 :: HashFuncs SHA1.Ctx
-sha1 = HashFuncs SHA1.init SHA1.update SHA1.finalize
-
 sha256 :: HashFuncs SHA256.Ctx
 sha256 = HashFuncs SHA256.init SHA256.update SHA256.finalize
 
-sha512 :: HashFuncs SHA512.Ctx
-sha512 = HashFuncs SHA512.init SHA512.update SHA512.finalize
-
-sinkSha1 :: HashSink
-sinkSha1 = sinkHash sha1
-
 sinkSha256 :: HashSink
 sinkSha256 = sinkHash sha256
-
-sinkSha512 :: HashSink
-sinkSha512 = sinkHash sha512
 
 myRespTimeout :: Option scheme
 myRespTimeout = responseTimeout $ 60 * 1000000  -- ^ 60 seconds

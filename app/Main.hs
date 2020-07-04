@@ -1,13 +1,15 @@
 {-# LANGUAGE ApplicativeDo #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 
 module Main (main) where
 
+import Data.Time.Calendar
+import Data.Time.Clock
 import Options.Applicative as OA
 import System.Directory (createDirectoryIfMissing)
-
-import Text.Pretty.Simple
-import qualified Data.HashMap.Strict as HM
+import System.ProgressBar
+import qualified Data.Text.Lazy.IO as TL
 
 
 import DownloadHackage
@@ -36,8 +38,19 @@ run :: Opts -> IO ()
 run opts = do
   createDirectoryIfMissing True (optBasePath opts)
   hackageJsonParsed <- parseHackageJson (optHackageJson opts)
-  pPrint $ take 10 $ getDownloadPlan hackageJsonParsed
-  -- downloadHackage (optHackageJson opts)
+  putStrLn
+    $ show (optHackageJson opts) ++ " contains "
+    ++ show (length hackageJsonParsed) ++ " "
+    ++ "packages (each segregates into versions and metadata (cabal) revisions)"
+  let downloadPlan = getDownloadPlan hackageJsonParsed
+  putStrLn $ "download plan: " ++ show (length downloadPlan) ++ " files"
+  putStrLn "downloading..."
+  let t = UTCTime (ModifiedJulianDay 0) 0
+      showProgr done =
+        TL.putStr $ "\r" <> renderProgressBar
+        defStyle (Progress done (length downloadPlan) ()) (Timing t t)
+  runDownloadPlan showProgr (optBasePath opts) downloadPlan
+  putStrLn "download complete!"
 
 optsParser :: Parser Opts
 optsParser = do

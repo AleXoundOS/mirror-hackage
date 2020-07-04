@@ -30,9 +30,7 @@ library:
   - base16-bytestring
   - bytestring
   - conduit
-  - cryptohash-sha1
   - cryptohash-sha256
-  - cryptohash-sha512
   - directory
   - filepath
   - http-client
@@ -55,7 +53,8 @@ executables:
     - directory
     - mirror-hackage
     - optparse-applicative
-    - pretty-simple
+    - terminal-progress-bar
+    - time
     - unordered-containers
 
 tests:

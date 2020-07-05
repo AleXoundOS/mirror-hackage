@@ -8,6 +8,7 @@ import Data.Monoid ((<>))
 import Data.Time.Clock
 import Options.Applicative as OA
 import System.Directory (createDirectoryIfMissing)
+import System.IO (hFlush, stdout)
 import System.ProgressBar
 import qualified Data.Text.Lazy as TL
 import qualified Data.Text.Lazy.IO as TL
@@ -71,6 +72,7 @@ run termWidth opts = do
         TL.putStr
           $ eraseTxt <> renderProgressBar pStyle progress timing
           <> " " <> TL.pack curFp
+        hFlush stdout
   runDownloadPlan showProgr (optBasePath opts) downloadPlan
   putStrLn "\ndownload complete!"
 

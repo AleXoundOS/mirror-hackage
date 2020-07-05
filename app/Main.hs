@@ -53,7 +53,7 @@ run termWidth opts = do
   putStrLn
     $ show (optHackageJson opts) ++ " contains "
     ++ show (length hackageJsonParsed) ++ " "
-    ++ "packages (each segregates into versions and metadata (cabal) revisions)"
+    ++ "packages (each segregates into versions and metadata/cabal revisions)"
   let downloadPlan = getDownloadPlan hackageJsonParsed
   putStrLn "downloading..."
   tStart <- getCurrentTime

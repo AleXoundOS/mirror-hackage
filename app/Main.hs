@@ -88,5 +88,5 @@ optsParser = do
     <> help "hackage.json file from hackage.nix repository"
   optDownloadLog <- optional $ strOption
     $ long "dl-log" <> metavar "DL_LOG"
-    <> help "Output log file"
+    <> help "Output log file (NOT IMPLEMENTED)"
   pure Opts {..}

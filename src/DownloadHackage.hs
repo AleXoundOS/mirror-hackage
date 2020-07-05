@@ -27,8 +27,11 @@ data Download = Download
 baseUrl :: Url 'Https
 baseUrl = https "hackage.haskell.org" /: "package"
 
-runDownloadPlan :: (Int -> IO ()) -> FilePath -> DownloadPlan -> IO ()
-runDownloadPlan showProgr basePath dlPlan = mapM_ go $ zip [0..] dlPlan
+runDownloadPlan :: (Int -> FilePath -> IO ()) -> FilePath -> DownloadPlan
+                -> IO ()
+runDownloadPlan showProgr basePath dlPlan = do
+  mapM_ go $ zip [0..] dlPlan
+  showProgr (length dlPlan) ""
   where
     mkReq url = Right (url, mempty)
     mkDlFunc :: Download -> IO ()
@@ -38,9 +41,8 @@ runDownloadPlan showProgr basePath dlPlan = mapM_ go $ zip [0..] dlPlan
       | Nothing <- mHash = void $
           downloadAndSave' (mkReq url) fp basePath
     go (idx, download) = do
-      showProgr idx
+      showProgr idx (dlFp download)
       mkDlFunc download
-      showProgr (idx + 1)
 
 getDownloadPlan :: HackageJson -> DownloadPlan
 getDownloadPlan = concatMap mkFullDlOfPkg . HM.toList

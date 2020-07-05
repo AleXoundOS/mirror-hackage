@@ -54,6 +54,8 @@ executables:
     - mirror-hackage
     - optparse-applicative
     - terminal-progress-bar
+    - terminal-size
+    - text
     - time
     - unordered-containers
 

@@ -1,5 +1,5 @@
 name:                mirror-hackage
-version:             0.1.0.0
+version:             0.1.1.0
 github:              "alexoundos/mirror-hackage"
 license:             GPL-3
 author:              "Alexander Tomokhov"

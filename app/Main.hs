@@ -10,6 +10,7 @@ import Options.Applicative as OA
 import System.Directory (createDirectoryIfMissing)
 import System.IO (hFlush, stdout)
 import System.ProgressBar
+import qualified Data.HashMap.Strict as HM (delete)
 import qualified Data.Text.Lazy as TL
 import qualified Data.Text.Lazy.IO as TL
 import qualified System.Console.Terminal.Size as TS (size, width)
@@ -50,7 +51,9 @@ getTermWidth = do
 run :: Int -> Opts -> IO ()
 run termWidth opts = do
   createDirectoryIfMissing True (optBasePath opts)
-  hackageJsonParsed <- parseHackageJson (optHackageJson opts)
+  let removeMissingPackage = HM.delete "hermes"
+  hackageJsonParsed <-
+    removeMissingPackage <$> parseHackageJson (optHackageJson opts)
   putStrLn
     $ show (optHackageJson opts) ++ " contains "
     ++ show (length hackageJsonParsed) ++ " "

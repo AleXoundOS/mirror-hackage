@@ -74,7 +74,7 @@ run termWidth opts = do
             eraseTxt = "\r" <> TL.justifyRight (fromIntegral termWidth) ' ' "\r"
         TL.putStr
           $ eraseTxt <> renderProgressBar pStyle progress timing
-          <> " " <> TL.pack curFp
+          <> " " <> TL.pack curFp <> " "
         hFlush stdout
   runDownloadPlan showProgr (optBasePath opts) downloadPlan
   putStrLn "\ndownload complete!"

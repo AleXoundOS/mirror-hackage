@@ -11,6 +11,8 @@ import System.Directory (createDirectoryIfMissing)
 import System.IO (hFlush, stdout)
 import System.ProgressBar
 import qualified Data.HashMap.Strict as HM (delete)
+import qualified Data.Text as T
+import qualified Data.Text.IO as T
 import qualified Data.Text.Lazy as TL
 import qualified Data.Text.Lazy.IO as TL
 import qualified System.Console.Terminal.Size as TS (size, width)
@@ -23,6 +25,7 @@ import HackageJson
 data Opts = Opts
   { optBasePath    :: FilePath
   , optHackageJson :: FilePath
+  , optExcludeFp   :: FilePath
   , optDownloadLog :: Maybe FilePath
   } deriving (Show)
 
@@ -51,9 +54,9 @@ getTermWidth = do
 run :: Int -> Opts -> IO ()
 run termWidth opts = do
   createDirectoryIfMissing True (optBasePath opts)
-  let removeMissingPackage = HM.delete "hermes"
-  hackageJsonParsed <-
-    removeMissingPackage <$> parseHackageJson (optHackageJson opts)
+  excludePackagesList <- T.lines <$> T.readFile (optExcludeFp opts)
+  hackageJsonParsed <- (\hm -> foldr HM.delete hm excludePackagesList)
+                       <$> parseHackageJson (optHackageJson opts)
   putStrLn
     $ show (optHackageJson opts) ++ " contains "
     ++ show (length hackageJsonParsed) ++ " "
@@ -89,6 +92,11 @@ optsParser = do
     $ long "hackage-json" <> metavar "HACKAGE_JSON"
     <> value "hackage.json" <> showDefault
     <> help "hackage.json file from hackage.nix repository"
+  optExcludeFp <- strOption
+    $ long "exclude-from" <> metavar "FILE"
+    <> value "exclude-packages.txt" <> showDefault
+    <> help "read hackage packages exclude list from file \
+            \(use /dev/null if none needed)"
   optDownloadLog <- optional $ strOption
     $ long "dl-log" <> metavar "DL_LOG"
     <> help "Output log file (NOT IMPLEMENTED)"

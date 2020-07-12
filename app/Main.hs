@@ -80,7 +80,7 @@ run termWidth opts = do
           <> " " <> TL.pack curFp <> " "
         hFlush stdout
   runDownloadPlan showProgr (optBasePath opts) downloadPlan
-  putStrLn "\ndownload complete!"
+  putStrLn "\ndownload is completed!"
 
 optsParser :: Parser Opts
 optsParser = do

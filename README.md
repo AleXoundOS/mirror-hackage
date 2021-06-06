@@ -1,11 +1,11 @@
-# mirror hackage program
+# hackage mirroring program
 
-Download hackage contents with the purpose of mirroring with http server.
+Download [hackage](https://hackage.haskell.org/) contents for the purpose of mirroring with http server. This should be useful for isolated LAN environments or lasting periods of being offline.
 
 ### input:
-- path of [hackage.json](https://github.com/input-output-hk/hackage.nix/blob/master/hackage.json)
-- path which is a base for downloaded files
-- path of excluded packages list file
+- path to [hackage.json](https://github.com/input-output-hk/hackage.nix/blob/master/hackage.json)
+- path as a base for downloaded files
+- path to excluded packages list file
 
 _All inputs have default values, refer to `mirror-hackage --help`_.
 

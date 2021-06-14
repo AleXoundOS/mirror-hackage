@@ -97,6 +97,8 @@ getWithBodyReader r bodyReader =
     handler :: HttpException -> IO (Either HttpException a)
     handler = return . Left
 
+parseUrl = undefined
+
 mkRequest :: Text -> Request
 mkRequest t = fromMaybe
   (error $ "cannot parse url: " ++ T.unpack t)

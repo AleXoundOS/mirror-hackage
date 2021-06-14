@@ -21,6 +21,7 @@ ghc-options:
 - -Wall -Wcompat
 - -Wpartial-fields -Wincomplete-record-updates
 - -Widentities -Wincomplete-uni-patterns -Wredundant-constraints
+- -fwrite-ide-info -hiedir=.hie
 
 library:
   source-dirs: src
